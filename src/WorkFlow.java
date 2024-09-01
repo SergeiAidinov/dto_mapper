@@ -1,3 +1,4 @@
+import annotation.Header;
 import dto.AbstractDto;
 import dto.header.AbstractHeader;
 
@@ -12,7 +13,7 @@ import java.util.stream.Stream;
 
 import static java.nio.file.Files.walk;
 
-public class WorkFlow {
+public class WorkFlow <T extends AbstractDto> {
 
     private static WorkFlow workFlow = null;
 
@@ -24,33 +25,64 @@ public class WorkFlow {
         return workFlow;
     }
 
-    public void createTree(){
+    public void createTree() {
         String directory = System.getenv().get("PWD") + File.separator + "src" + File.separator + "dto";
-        Set<Path> files = new HashSet<>();
-        try(Stream<Path> paths = walk(Paths.get(directory))) {
+        List<Path> files = new ArrayList<>();
+        try (Stream<Path> paths = walk(Paths.get(directory))) {
             paths.filter(Files::isRegularFile).forEach(files::add);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
         System.out.println(files);
-        Map<? extends AbstractHeader, ? extends AbstractDto> headersAndBodies = new HashMap<>();
-        Set<Class<? extends AbstractHeader>> headers = new HashSet<>();
-        for (Path path : files) {
+        Map<Class<? extends AbstractHeader>, List<T>> headersAndBodies = new HashMap<>();
+        //Set<Class<? extends AbstractHeader>> headers = new HashSet<>();
+
+        ListIterator<Path> listIterator = files.listIterator();
+        while (listIterator.hasNext()) {
+            Path path = listIterator.next();
+            Class<?> klass;
             try {
-               String fileName = path.toString().substring(path.toString()
-                       .lastIndexOf("dto"), path.toString().lastIndexOf("."))
-                       .replace(File.separator, ".");
-               Class<?> klass = Class.forName(fileName);
-                System.out.println(klass + " is header: " + isHeader(klass));
-               if (isHeader(klass) && !Modifier.isAbstract(klass.getModifiers())) {
-                   headers.add((Class<? extends AbstractHeader>) klass);
-               }
+                String fileName = path.toString().substring(path.toString()
+                                .lastIndexOf("dto"), path.toString().lastIndexOf("."))
+                        .replace(File.separator, ".");
+                klass = Class.forName(fileName);
             } catch (ClassNotFoundException e) {
                 throw new RuntimeException(e);
             }
+            System.out.println(klass + " is header: " + isHeader(klass));
+            if (isHeader(klass) && !Modifier.isAbstract(klass.getModifiers())) {
+                headersAndBodies.put((Class<? extends AbstractHeader>) klass, new ArrayList<>());
+                listIterator.remove();
+            }
+            if (Modifier.isAbstract(klass.getModifiers())) listIterator.remove();
         }
-        System.out.println(headers);
-
+        System.out.println(headersAndBodies);
+        while (listIterator.hasPrevious()) {
+            Path path = listIterator.previous();
+            Class<?> klass;
+            try {
+                String fileName = path.toString().substring(path.toString()
+                                .lastIndexOf("dto"), path.toString().lastIndexOf("."))
+                        .replace(File.separator, ".");
+                klass = Class.forName(fileName);
+            } catch (ClassNotFoundException e) {
+                throw new RuntimeException(e);
+            }
+            System.out.println(klass + " is header: " + isHeader(klass));
+            if (klass.isAnnotationPresent(Header.class)) {
+                Header annotation = klass.getAnnotation(Header.class);
+                Class<? extends AbstractHeader> header = annotation.header();
+                T instance;
+                try {
+                    instance = (T) klass.newInstance();
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+                headersAndBodies.get(header).add(instance);
+                listIterator.remove();
+            }
+        }
+        System.out.println(headersAndBodies);
     }
 
     private boolean isHeader(Class klass) {
@@ -62,8 +94,5 @@ public class WorkFlow {
         }
         return false;
     }
-
-
-
 
 }
