@@ -1,6 +1,6 @@
 import annotation.Header;
 import dto.header.AbstractHeader;
-import dto.payload.AbstracPayload;
+import dto.payload.AbstractPayload;
 
 import java.io.File;
 import java.io.IOException;
@@ -13,7 +13,7 @@ import java.util.stream.Stream;
 
 import static java.nio.file.Files.walk;
 
-public class Forester <H extends AbstractHeader, P extends AbstracPayload> {
+public class Forester <H extends AbstractHeader, P extends AbstractPayload> {
 
     public Map<Class<H>, List<Class<P>>> plantForest() {
         String directory = System.getenv().get("PWD") + File.separator + "src" + File.separator + "dto";

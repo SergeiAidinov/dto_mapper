@@ -1,2 +1,3 @@
 qwertyIvan:Ivanov;
 12345Boris:Borisov;
+12345T-800:Terminator;
