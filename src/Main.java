@@ -3,7 +3,7 @@
 public class Main {
     public static void main(String[] args) {
         final WorkFlow workFlow = WorkFlow.getInstance();
-        workFlow.createTree();
+        workFlow.work();
 
     }
 }
