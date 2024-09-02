@@ -50,7 +50,7 @@ public class WorkFlow<H extends AbstractHeader, P extends AbstractPayload> {
         Method ofStringMethod = null;
         try {
             ofStringMethod = clazz.getMethod("ofString", String.class);
-            header = (H) ofStringMethod.invoke(clazz.newInstance(), word);
+            header = (H) ofStringMethod.invoke(ofStringMethod, word);
         } catch (Exception e) {
             return null;
         }
@@ -62,7 +62,7 @@ public class WorkFlow<H extends AbstractHeader, P extends AbstractPayload> {
         for (Class<P> klass : forest.get(header.getClass())) {
             try {
                 Method ofStringMethod = klass.getMethod("ofString", String.class);
-                payload = (P) ofStringMethod.invoke(klass.newInstance(), word.substring(header.getHeaderLength()));
+                payload = (P) ofStringMethod.invoke(ofStringMethod, word.substring(header.getHeaderLength()));
             } catch (Exception e) {
                 return null;
             }

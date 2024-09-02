@@ -3,18 +3,22 @@ package dto.header;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class ExtendedDigitalHeader extends DigitalHeader {
+public class ExtendedDigitalHeader extends AbstractHeader {
 
-    private final String valuePattern = "[0-9]{7}";
+    private static final String valuePattern = "[0-9]{7}";
     private String value;
 
-    @Override
-    public DigitalHeader ofString (String data){
-        value = data.substring(0,6);
+    private ExtendedDigitalHeader(String value) {
+        this.value = value;
+    }
+
+    //@Override
+    public static ExtendedDigitalHeader ofString (String data){
+        String _value = data.substring(0,6);
         Pattern pattern = Pattern.compile(valuePattern);
-        Matcher matcher = pattern.matcher(value);
+        Matcher matcher = pattern.matcher(_value);
         if (matcher.find()) {
-            return this;
+            return new ExtendedDigitalHeader(_value);
         } else {
             return null;
         }

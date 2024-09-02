@@ -5,17 +5,21 @@ import java.util.regex.Pattern;
 
 public class DigitalHeader extends AbstractHeader{
 
-    private final int headerLength = 5;
-    private final String valuePattern = "[0-9]{5}";
+    public static final int headerLength = 5;
+    private final static String valuePattern = "[0-9]{5}";
     private String value;
 
-    @Override
-    public DigitalHeader ofString (String data){
-        value = data.substring(0, headerLength);
+    private DigitalHeader(String value) {
+        this.value = value;
+    }
+
+    //@Override
+    public static DigitalHeader ofString (String data){
+        String _value = data.substring(0, headerLength);
         Pattern pattern = Pattern.compile(valuePattern);
-        Matcher matcher = pattern.matcher(value);
+        Matcher matcher = pattern.matcher(_value);
         if (matcher.find()) {
-            return this;
+            return new DigitalHeader(_value);
         } else {
             return null;
         }
