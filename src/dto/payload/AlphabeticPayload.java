@@ -28,5 +28,4 @@ public class AlphabeticPayload extends AbstractPayload {
         if (!matcher.matches()) return null;
         return new AlphabeticPayload(_name, _surname);
     }
-
 }

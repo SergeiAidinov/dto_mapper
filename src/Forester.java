@@ -15,7 +15,7 @@ import static java.nio.file.Files.walk;
 
 public class Forester <H extends AbstractHeader, P extends AbstractPayload> {
 
-    public Map<Class<H>, List<Class<P>>> plantForest() {
+    public SortedMap<Class<H>, List<Class<P>>> plantForest() {
         String directory = System.getenv().get("PWD") + File.separator + "src" + File.separator + "dto";
         List<Path> filePaths = new ArrayList<>();
         try (Stream<Path> paths = walk(Paths.get(directory))) {
@@ -24,9 +24,7 @@ public class Forester <H extends AbstractHeader, P extends AbstractPayload> {
             throw new RuntimeException(e);
         }
         System.out.println(filePaths);
-        Map<Class<H>, List<Class<P>>> headersAndBodies = new HashMap<>();
-        //Set<Class<? extends AbstractHeader>> headers = new HashSet<>();
-
+        SortedMap<Class<H>, List<Class<P>>> headersAndBodies = new TreeMap<>(new HeaderComparator());
         ListIterator<Path> listIterator = filePaths.listIterator();
         while (listIterator.hasNext()) {
             Path path = listIterator.next();

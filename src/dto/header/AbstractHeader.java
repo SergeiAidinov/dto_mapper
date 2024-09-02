@@ -1,10 +1,8 @@
 package dto.header;
 
-import annotation.Header;
+public abstract class AbstractHeader <H extends AbstractHeader> implements Comparable<H>{
 
-public abstract class AbstractHeader <T extends AbstractHeader> {
-
-    private int headerLength = 0;
+    public static final int headerLength = 0;
     public static AbstractHeader ofString (String data){
         return null;
     }

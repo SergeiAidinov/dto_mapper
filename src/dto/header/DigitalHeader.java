@@ -32,4 +32,9 @@ public class DigitalHeader extends AbstractHeader{
     public int getHeaderLength() {
         return headerLength;
     }
+
+    @Override
+    public int compareTo(Object o) {
+        return 0;
+    }
 }

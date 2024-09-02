@@ -3,8 +3,9 @@ package dto.header;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class ExtendedDigitalHeader extends AbstractHeader {
+public class ExtendedDigitalHeader<H extends AbstractHeader> extends AbstractHeader {
 
+    public static final int headerLength = 7;
     private static final String valuePattern = "[0-9]{7}";
     private String value;
 
@@ -26,5 +27,13 @@ public class ExtendedDigitalHeader extends AbstractHeader {
 
     public String getValue() {
         return value;
+    }
+
+    @Override
+    public int compareTo(Object o) {
+        final Integer thisHeaderLength = headerLength;
+        final H otherHeader = (H) o;
+        final Integer otherHeaderLength = otherHeader.getHeaderLength();
+        return thisHeaderLength.compareTo(otherHeaderLength);
     }
 }
