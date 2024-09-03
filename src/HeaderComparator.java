@@ -16,6 +16,6 @@ public class HeaderComparator<H extends AbstractHeader> implements Comparator<Cl
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-        return l1.compareTo(l2);
+        return - l1.compareTo(l2);
     }
 }

@@ -1,21 +1,23 @@
 package dto.payload;
 
 import annotation.Header;
+import dto.header.AbstractHeader;
+import dto.header.AlphabeticHeader;
 import dto.header.DigitalHeader;
-import dto.header.ExtendedDigitalHeader;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-@Header(headers = {DigitalHeader.class, ExtendedDigitalHeader.class})
-public class AlphabeticPayload extends AbstractPayload {
-    private static String patternRegEx = "[a-zA-Z]{1,}";
+@Header(headers = {AlphabeticHeader.class})
+public class DigitalPayload extends AbstractPayload {
+
+    private static String patternRegEx = "[0-9]{1,}";
     private String name;
     private String surname;
 
-    private AlphabeticPayload(String name, String surname) {
-        this.name = name;
-        this.surname = surname;
+    private DigitalPayload(String _name, String _surname) {
+        name = _name;
+        surname = _surname;
     }
 
     public String getName() {
@@ -26,7 +28,7 @@ public class AlphabeticPayload extends AbstractPayload {
         return surname;
     }
 
-    public static AlphabeticPayload ofString(String data) {
+    public static DigitalPayload ofString(String data) {
         int columnPosition = data.indexOf(':');
         String _name = data.substring(0, columnPosition);
         String _surname = data.substring(columnPosition + 1);
@@ -35,6 +37,6 @@ public class AlphabeticPayload extends AbstractPayload {
         if (!matcher.matches()) return null;
         matcher = pattern.matcher(_surname);
         if (!matcher.matches()) return null;
-        return new AlphabeticPayload(_name, _surname);
+        return new DigitalPayload(_name, _surname);
     }
 }

@@ -28,6 +28,10 @@ public class AlphabeticHeader <H extends AbstractHeader> extends AbstractHeader 
         return value;
     }
 
+    public int getHeaderLength() {
+        return headerLength;
+    }
+
     @Override
     public int compareTo(Object o) {
         final Integer thisHeaderLength = headerLength;

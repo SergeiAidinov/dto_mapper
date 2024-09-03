@@ -15,7 +15,7 @@ public class ExtendedDigitalHeader<H extends AbstractHeader> extends AbstractHea
 
     //@Override
     public static ExtendedDigitalHeader ofString (String data){
-        String _value = data.substring(0,6);
+        String _value = data.substring(0,headerLength);
         Pattern pattern = Pattern.compile(valuePattern);
         Matcher matcher = pattern.matcher(_value);
         if (matcher.find()) {
@@ -35,5 +35,9 @@ public class ExtendedDigitalHeader<H extends AbstractHeader> extends AbstractHea
         final H otherHeader = (H) o;
         final Integer otherHeaderLength = otherHeader.getHeaderLength();
         return thisHeaderLength.compareTo(otherHeaderLength);
+    }
+
+    public int getHeaderLength() {
+        return headerLength;
     }
 }

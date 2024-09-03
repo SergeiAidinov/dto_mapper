@@ -59,8 +59,9 @@ public class Forester <H extends AbstractHeader, P extends AbstractPayload> {
             System.out.println(klass + " is header: " + isHeader(klass));
             if (klass.isAnnotationPresent(Header.class)) {
                 Header annotation = klass.getAnnotation(Header.class);
-                Class<? extends AbstractHeader> header = annotation.header();
-                if (Objects.nonNull(headersAndBodies.get(header))) headersAndBodies.get(header).add(klass);
+                Class<? extends AbstractHeader>[] headers = annotation.headers();
+                Arrays.stream(headers).forEach(h -> headersAndBodies.get(h).add(klass));
+                //if (Objects.nonNull(headersAndBodies.get(header))) headersAndBodies.get(header).add(klass);
                 listIterator.remove();
             }
         }
